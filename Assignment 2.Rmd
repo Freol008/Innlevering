@@ -1,0 +1,37 @@
+---
+title: "assignment 2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readr)
+library(dplyr)
+
+
+paperhistory_php_paper_EQNR <- read_csv("https://www.netfonds.no/quotes/paperhistory.php?paper=EQNR.OSE&csv_format=csv", 
+                                        col_types = cols(quote_date = col_date(format = "%Y%m%d")))
+
+
+paperhistory_php_paper_NHY <- read_csv("https://www.netfonds.no/quotes/paperhistory.php?paper=NHY.OSE&csv_format=csv", 
+                                       col_types = cols(quote_date = col_date(format = "%Y%m%d")))
+
+
+dplr <- left_join(paperhistory_php_paper_EQNR, paperhistory_php_paper_NHY, by=c("quote_date"))
+
+
+arrange(dplr,desc(quote_date))
+
+
+ggplot()+
+  geom_line(data=dplr,aes(x=quote_date,y=close.x),color="orange")+
+  geom_line(data=dplr,aes(x=quote_date,y=close.y),color="cyan")+
+  xlab("Date")+ylab("Value")
+
+#Grafen viser stengeverdien til Norsk Hydro i "cyan" og Equinor i "oransje" over tid.
+```
+
